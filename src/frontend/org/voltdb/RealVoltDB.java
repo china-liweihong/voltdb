@@ -1033,6 +1033,7 @@ public class RealVoltDB implements VoltDBInterface, RestoreAgent.Callback, HostM
 
             m_clusterSettings.set(clusterSettings, 1);
 
+            //TODO: move setupSSL that happens as part of InitsWork to buildClusterMesh
             MeshProber.Determination determination = buildClusterMesh(readDepl);
             if (m_config.m_startAction == StartAction.PROBE) {
                 String action = "Starting a new database cluster";
@@ -2865,7 +2866,7 @@ public class RealVoltDB implements VoltDBInterface, RestoreAgent.Callback, HostM
                 .build();
 
         HostAndPort hostAndPort = criteria.getLeader();
-        String hostname = hostAndPort.getHostText();
+        String hostname = hostAndPort.getHost();
         int port = hostAndPort.getPort();
 
         org.voltcore.messaging.HostMessenger.Config hmconfig;
@@ -2883,7 +2884,7 @@ public class RealVoltDB implements VoltDBInterface, RestoreAgent.Callback, HostM
         hmconfig.acceptor = criteria;
         hmconfig.localSitesCount = m_config.m_sitesperhost;
 
-        m_messenger = new org.voltcore.messaging.HostMessenger(hmconfig, this);
+        m_messenger = new org.voltcore.messaging.HostMessenger(hmconfig, this, m_config.m_sslContext);
 
         hostLog.info(String.format("Beginning inter-node communication on port %d.", m_config.m_internalPort));
 
