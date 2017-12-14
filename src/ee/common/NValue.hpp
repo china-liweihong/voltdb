@@ -364,7 +364,8 @@ class NValue {
        be changed or deallcoated. E.g., an inlined string in a
        stand-alone tuple is volatile. */
     bool getVolatile() const {
-        return getAttribute(VOLATILE);
+        return m_volatile;
+        // return getAttribute(VOLATILE);
     }
 
     /* For number values, check the number line. */
@@ -829,7 +830,9 @@ private:
      */
     char m_data[16];
     ValueType m_valueType;
-    uint8_t m_attributes;
+    bool m_sourceInlined;
+    bool m_volatile;
+    // uint8_t m_attributes;
 
     /**
      * Private constructor that initializes storage and the specifies the type of value
@@ -868,39 +871,43 @@ private:
 
     /** Mark this value as referencing storage that is inside a tuple. */
     void setSourceInlined(bool val) {
-        setAttribute(SOURCE_INLINED, val);
+        m_sourceInlined = val;
+        // setAttribute(SOURCE_INLINED, val);
     }
 
     /* Tell caller if this NValue's value refers back to VARCHAR or
        VARBINARY data internal to a TableTuple (and not a StringRef) */
     bool getSourceInlined() const {
-        return getAttribute(SOURCE_INLINED);
+        return m_sourceInlined;
+        // return getAttribute(SOURCE_INLINED);
     }
 
     /** Mark this value as referencing storage that is subject to
         change or deallocation during this value's lifetime. */
     void setVolatile(bool val) {
-        setAttribute(VOLATILE, val);
+        m_volatile = val;
+        // setAttribute(VOLATILE, val);
     }
 
     /** Get the value (0 or 1) of the given attribute bit. */
-    bool getAttribute(AttrBits bit) const {
-        return (m_attributes & bit) != 0;
-    }
+    // bool getAttribute(AttrBits bit) const {
+    //     return (m_attributes & bit) != 0;
+    // }
 
     /** Set the value (0 or 1) of the given attribute bit. */
-    void setAttribute(AttrBits attrBit, bool value) {
-        if (value) {
-            m_attributes |= attrBit;
-        }
-        else {
-            m_attributes &= ~attrBit;
-        }
-    }
+    // void setAttribute(AttrBits attrBit, bool value) {
+    //     if (value) {
+    //         m_attributes |= attrBit;
+    //     }
+    //     else {
+    //         m_attributes &= ~attrBit;
+    //     }
+    // }
 
     /** Set the default value for all attributes. */
     void setDefaultAttributes() {
-        m_attributes = 0x0;
+        // m_attributes = 0x0;
+        m_sourceInlined = m_volatile = false;
     }
 
     void tagAsNull() { m_data[13] = OBJECT_NULL_BIT; }
