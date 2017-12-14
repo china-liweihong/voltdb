@@ -363,7 +363,7 @@ class NValue {
     /* Tell caller if this NValue's value references memory that may
        be changed or deallcoated. E.g., an inlined string in a
        stand-alone tuple is volatile. */
-    bool getVolatile() const {
+    inline bool getVolatile() const {
         return m_volatile;
         // return getAttribute(VOLATILE);
     }
@@ -870,21 +870,21 @@ private:
     }
 
     /** Mark this value as referencing storage that is inside a tuple. */
-    void setSourceInlined(bool val) {
+    inline void setSourceInlined(bool val) {
         m_sourceInlined = val;
         // setAttribute(SOURCE_INLINED, val);
     }
 
     /* Tell caller if this NValue's value refers back to VARCHAR or
        VARBINARY data internal to a TableTuple (and not a StringRef) */
-    bool getSourceInlined() const {
+    inline bool getSourceInlined() const {
         return m_sourceInlined;
         // return getAttribute(SOURCE_INLINED);
     }
 
     /** Mark this value as referencing storage that is subject to
         change or deallocation during this value's lifetime. */
-    void setVolatile(bool val) {
+    inline void setVolatile(bool val) {
         m_volatile = val;
         // setAttribute(VOLATILE, val);
     }
@@ -905,7 +905,7 @@ private:
     // }
 
     /** Set the default value for all attributes. */
-    void setDefaultAttributes() {
+    inline void setDefaultAttributes() {
         // m_attributes = 0x0;
         m_sourceInlined = m_volatile = false;
     }
